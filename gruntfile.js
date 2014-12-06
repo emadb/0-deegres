@@ -6,24 +6,21 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-hapi');
 
   grunt.initConfig({
+    watch: {
+      hapi: {
+        files: ['*.js','lib/*.js'],
+        tasks: ['jshint','hapi'],
+        options: {
+          spawn: false
+        }
+      }
+    },
     hapi: {
       custom_options: {
         options: {
           server: require('path').resolve('./lib/server'),
-          bases: {
-            '/': '.'
-          }
         }
       }
-    },
-    watch: {
-      scripts: {
-        files: ['lib/**/*.js'],
-        tasks: ['jshint', 'hapi'],
-        options: {
-          spawn: false,
-        },
-      },
     },
     mochaTest: {
       options: {
@@ -40,6 +37,6 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('test', ['mochaTest']);
-  grunt.registerTask('default', ['jshint', 'watch', 'hapi']);
+  grunt.registerTask('default', ['jshint', 'hapi','watch']);
 
 };
