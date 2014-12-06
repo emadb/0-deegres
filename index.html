@@ -16,6 +16,13 @@
         <legend>near users</legend>
         <ul id="users"></ul>
     </fieldset>
+    <fieldset>
+        <legend>Message</legend>
+        <textarea id="msg"></textarea>
+        <p>
+            <input type="button" id="send" value="Send" />
+        </p>
+    </fieldset>
     
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -36,9 +43,15 @@
                 $('#uuid').html('userid: ' + res.uuid);
                 $.get(serverUrl + '/users/' + userId, function(res){
                     res.forEach(function(u){
-                        $('#users').append('<li>' + u.nickname + '</li>')
+                        $('#users').append('<li><input type="checkbox" id="' + u.id + '" /> ' + u.nickname + '</li>')
                     });
                 });
+            });
+        });
+
+        $('#send').click(function(){
+            $('input[type=checkbox]:checked').each(function(index, chk){
+                console.log(chk.id);
             });
         });
     });
