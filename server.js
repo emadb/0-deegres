@@ -1,49 +1,49 @@
 module.exports = (function() {
     var Hapi = require('hapi');
     var server = new Hapi.Server('localhost', 8000);
-    var mongoose = require('mongoose');
-
-    mongoose.connect('mongodb://localhost/zeroD');
-
-    var userSchema = mongoose.Schema({
-        nickname: String,
-        location: { type : Object }
-    });
-
-    var User = mongoose.model('User', userSchema);
+    var db = require('monk')('localhost/zeroD');
 
     server.route({
         method: 'POST',
         path: '/login',
         handler: function (req, reply) {
-            var user = new User();
-            console.log(req.payload);
-            user.nickname = req.payload .nickname;
-            user.location = {
-                type : "Point",
-                coordinates : req.payload.coords
+            var users = db.get('users');
+            var user = {
+                nickname: req.payload.nickname,
+                location : {
+                   type : "Point",
+                    coordinates : [parseFloat(req.payload.coords[0]), parseFloat(req.payload.coords[1])]
+                }
             };
-            user.save();
-            console.log(user);
-            reply({message: 'welcome', uuid: user._id});
+
+            users.insert(user, function(err, doc){
+                user._id = doc._id;
+                reply({message: 'welcome', uuid: user._id});
+            });
         }
     });
 
-    // server.route({
-    //     method: 'GET',
-    //     path: '/users/{id}',
-    //     handler: function (req, reply) {
-    //         var user = User.findOne({'_id': req.params.id})
-    //         Users.find({
-    //           $near: {
-    //              $geometry: {
-    //                 type: "Point" ,
-    //                 coords: user.location
-    //              },
-    //              $maxDistance: 50
-    //           }
-    //         }
-    //     });
+    server.route({
+        method: 'GET',
+        path: '/users/{id}',
+        handler: function (req, reply) {
+            var users = db.get('users');
+            users.findById(req.params.id, function(err, user){
+                var query = {
+                     location:
+                       { $near :
+                          {
+                            $geometry: { type: "Point",  coordinates:  user.location.coordinates },
+                            $maxDistance: 50
+                          }
+                       }
+                   };
+                
+                users.find(query, function(err, nearUsers) {
+                    reply(nearUsers);
+                });    
+            });
+    }});
 
     return {
         start: function() {server.start();}
