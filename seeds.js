@@ -3,10 +3,14 @@ var users = db.get('users');
 users.drop();
 
 var count = 0;
-var oneMeter = 0.00001;
+var tenMeters = 0.0001;
+
+users.insert({ _id: '111111111111', nickname: 'test_user',
+  location: {type : "Point", coordinates : [45.56376, 10.23136]}
+});
 
 users.insert({ nickname: 'user' + count++,
-  location: {type : "Point", coordinates : [45.56376, 10.23136]}
+  location: {type : "Point", coordinates : [45.56377, 10.23135]}
 });
 
 users.insert({ nickname: 'user' + count++,

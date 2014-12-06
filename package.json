@@ -11,6 +11,7 @@
   "dependencies": {
     "chai": "^1.10.0",
     "hapi": "~7.5.2",
+    "lodash": "^2.4.1",
     "monk": "^0.9.1"
   },
   "devDependencies": {
@@ -20,6 +21,6 @@
     "grunt-hapi": "^0.8.1",
     "grunt-mocha-test": "^0.12.4",
     "mocha": "^2.0.1",
-    "request": "^2.49.0",
+    "request": "^2.49.0"
   }
 }
