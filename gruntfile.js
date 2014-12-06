@@ -19,6 +19,9 @@ module.exports = function(grunt) {
       custom_options: {
         options: {
           server: require('path').resolve('./lib/server'),
+          bases: {
+            '/': '.'
+          }
         }
       }
     },

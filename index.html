@@ -1,0 +1,50 @@
+<html>
+<head>
+    
+</head>
+<body>
+    <fieldset>
+        <legend>login</legend>
+        <input type="text" id="nickname" />
+        <input type="button" id="login" value="Login" disabled="disabled" />
+        <div>
+            <p id="coords"></p>
+            <p id="uuid"></p>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>near users</legend>
+        <ul id="users"></ul>
+    </fieldset>
+    
+
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript">
+    $(function(){
+        var serverUrl = 'http://localhost:8000';
+        var coords;
+        var userId;
+        navigator.geolocation.getCurrentPosition(function(geo){ 
+            coords = [geo.coords.latitude, geo.coords.longitude];
+            $('#coords').html('lat: '+geo.coords.latitude + '&nbsp;&nbsp;lon: ' + geo.coords.longitude);
+            $('#login').prop('disabled', false);
+        });
+        $('#login').click(function(){
+            var data = {nickname: $('#nickname').val(), coords: coords};
+            $.post(serverUrl + '/login',data, function(res){
+                userId = res.uuid;
+                $('#uuid').html('userid: ' + res.uuid);
+                $.get(serverUrl + '/users/' + userId, function(res){
+                    res.forEach(function(u){
+                        $('#users').append('<li>' + u.nickname + '</li>')
+                    });
+                });
+            });
+        });
+    });
+
+
+    </script>
+
+</body>
+</html>
