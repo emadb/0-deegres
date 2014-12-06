@@ -8,8 +8,8 @@ module.exports = function(grunt) {
   grunt.initConfig({
     watch: {
       hapi: {
-        files: ['*.js','lib/*.js'],
-        tasks: ['jshint','hapi'],
+        files: ['*.js', 'lib/*.js'],
+        tasks: ['jshint', 'hapi'],
         options: {
           spawn: false
         }
@@ -26,7 +26,7 @@ module.exports = function(grunt) {
       options: {
         reporter: 'spec',
         timeout: 3000
-     },
+      },
       src: [
         'test/*.js'
       ]
@@ -37,6 +37,6 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('test', ['mochaTest']);
-  grunt.registerTask('default', ['jshint', 'hapi','watch']);
+  grunt.registerTask('default', ['jshint', 'hapi', 'watch']);
 
 };
