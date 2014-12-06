@@ -1,0 +1,24 @@
+{
+  "name": "zeroDegree",
+  "version": "0.0.0",
+  "description": "A super local chat server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^1.10.0",
+    "hapi": "~7.5.2",
+    "mongoose": "~3.8.20"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-mocha-test": "^0.12.4",
+    "grunt-nodemon": "^0.3.0",
+    "mocha": "^2.0.1",
+    "request": "^2.49.0",
+    "request-mocha": "^0.2.0"
+  }
+}
