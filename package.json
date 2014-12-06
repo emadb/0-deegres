@@ -11,13 +11,14 @@
   "dependencies": {
     "chai": "^1.10.0",
     "hapi": "~7.5.2",
-    "mongodb": "~2.0",
     "monk": "^0.9.1"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-hapi": "^0.8.1",
     "grunt-mocha-test": "^0.12.4",
-    "grunt-nodemon": "^0.3.0",
     "mocha": "^2.0.1",
     "request": "^2.49.0",
     "request-mocha": "^0.2.0"

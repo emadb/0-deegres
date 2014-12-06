@@ -37,8 +37,9 @@ users.insert({ nickname: 'far_user' + count++,
   location: {type : "Point", coordinates : [45.50, 10.29]}
 });
 
+users.index( { "location" : "2dsphere" }, function(err){
+  db.close();  
+});
 
-users.ensureIndex( { "location" : "2dsphere" } )
-db.close();
 
 

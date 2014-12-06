@@ -1,13 +1,29 @@
 module.exports = function(grunt) {
 
-  grunt.loadNpmTasks('grunt-nodemon');
   grunt.loadNpmTasks('grunt-mocha-test');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-hapi');
 
   grunt.initConfig({
-    nodemon: {
-      dev: {
-        script: 'index.js'
+    hapi: {
+      custom_options: {
+        options: {
+          server: require('path').resolve('./lib/server'),
+          bases: {
+            '/': '.'
+          }
+        }
       }
+    },
+    watch: {
+      scripts: {
+        files: ['lib/**/*.js'],
+        tasks: ['jshint', 'hapi'],
+        options: {
+          spawn: false,
+        },
+      },
     },
     mochaTest: {
       options: {
@@ -17,10 +33,13 @@ module.exports = function(grunt) {
       src: [
         'test/*.js'
       ]
+    },
+    jshint: {
+      all: ['Gruntfile.js', 'seeds.js', 'lib/**/*.js', 'test/**/*.js']
     }
   });
 
   grunt.registerTask('test', ['mochaTest']);
-  grunt.registerTask('default', ['nodemon']);
+  grunt.registerTask('default', ['jshint', 'watch', 'hapi']);
 
 };
