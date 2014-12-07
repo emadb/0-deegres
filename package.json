@@ -12,7 +12,8 @@
     "chai": "^1.10.0",
     "hapi": "~7.5.2",
     "lodash": "^2.4.1",
-    "monk": "^0.9.1"
+    "monk": "^0.9.1",
+    "socket.io": "^1.2.1"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

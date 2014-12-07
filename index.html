@@ -23,11 +23,17 @@
             <input type="button" id="send" value="Send" />
         </p>
     </fieldset>
+    <fieldset>
+        <ul id="messages"></ul>
+    </fieldset>
     
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript">
     $(function(){
+        var socket;
+
         var serverUrl = 'http://localhost:8000';
         var coords;
         var userId;
@@ -39,6 +45,12 @@
         $('#login').click(function(){
             var data = {nickname: $('#nickname').val(), coords: coords};
             $.post(serverUrl + '/login',data, function(res){
+                socket = io();
+                socket.emit('request-connection', {uuid: res.uuid});
+                socket.on('new-message', function(data){
+                    console.log('new-message', data);
+                    $('#messages').append($('<li>').text('from:' + data.from.nickname + ' - msg:' + data.msg));
+                });
                 userId = res.uuid;
                 $('#uuid').html('userid: ' + res.uuid);
                 $.get(serverUrl + '/users/' + userId, function(res){
@@ -50,9 +62,13 @@
         });
 
         $('#send').click(function(){
-            $('input[type=checkbox]:checked').each(function(index, chk){
-                console.log(chk.id);
+            var chks = $.map($('input[type=checkbox]:checked'), function(chk){
+                return chk.id;
             });
+            var data = {senderId: userId, recipients: chks, msg: $('#msg').val()}
+            $.post(serverUrl + '/send', data, function(res){
+                console.log('ok', res);
+            });                  
         });
     });
 
