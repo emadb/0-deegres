@@ -62,6 +62,7 @@
       $('#coords').html('lat: ' + geo.coords.latitude + '&nbsp;&nbsp;lon: ' + geo.coords.longitude);
       $('#login').prop('disabled', false);
     });
+
     $('#login').click(function() {
       var data = {
         nickname: $('#nickname').val(),
@@ -70,14 +71,21 @@
       $.post('/login', data, function(res) {
         socket = io();
         socket.emit('request-connection', {
-          uuid: res.uuid
+           uuid: res.uuid
         });
+        
         socket.on('new-message', function(data) {
-          console.log('new-message', data);
           $('#messages').append($('<li>').text('from:' + data.from.nickname + ' - msg:' + data.msg));
         });
+
+        socket.on('new-user', function(u){
+          console.log('new-user', u);
+          $('#users').append('<li><input type="checkbox" id="' + u.id + '" /> ' + u.nickname + '</li>')
+        });
+
         userId = res.uuid;
         $('#uuid').html('userid: ' + res.uuid);
+        $('#users').html('');
         $.get('/users/' + userId, function(res) {
           res.forEach(function(u) {
             $('#users').append('<li><input type="checkbox" id="' + u.id + '" /> ' + u.nickname + '</li>')
