@@ -1,77 +1,106 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
-    
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="Emanuele DelBono">
+
+
+  <title>ZeroDeegrees</title>
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
-    <fieldset>
+  <div class="container">
+    <div class="col-md-2">
+      <fieldset>
         <legend>login</legend>
         <input type="text" id="nickname" />
-        <input type="button" id="login" value="Login" disabled="disabled" />
+        <input type="button" class="btn" id="login" value="Login" disabled="disabled" />
         <div>
-            <p id="coords"></p>
-            <p id="uuid"></p>
+          <p class="help-block" id="coords"></p>
+          <p class="help-block" id="uuid"></p>
         </div>
-    </fieldset>
-    <fieldset>
+      </fieldset>
+    </div>
+    <div class="col-md-2">
+      <fieldset>
         <legend>near users</legend>
         <ul id="users"></ul>
-    </fieldset>
-    <fieldset>
+      </fieldset>
+    </div>
+    <div class="col-md-2">
+      <fieldset>
         <legend>Message</legend>
         <textarea id="msg"></textarea>
         <p>
-            <input type="button" id="send" value="Send" />
+          <input type="button" class="btn" id="send" value="Send" />
         </p>
-    </fieldset>
-    <fieldset>
+      </fieldset>
+    </div>
+    <div class="col-md-2">
+      <fieldset>
         <ul id="messages"></ul>
-    </fieldset>
-    
+      </fieldset>
+    </div>
 
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript">
-    $(function(){
-        var socket;
-        var coords;
-        var userId;
-        navigator.geolocation.getCurrentPosition(function(geo){ 
-            coords = [geo.coords.latitude, geo.coords.longitude];
-            $('#coords').html('lat: '+geo.coords.latitude + '&nbsp;&nbsp;lon: ' + geo.coords.longitude);
-            $('#login').prop('disabled', false);
+  </div>
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    var socket;
+    var coords;
+    var userId;
+    navigator.geolocation.getCurrentPosition(function(geo) {
+      coords = [geo.coords.latitude, geo.coords.longitude];
+      $('#coords').html('lat: ' + geo.coords.latitude + '&nbsp;&nbsp;lon: ' + geo.coords.longitude);
+      $('#login').prop('disabled', false);
+    });
+    $('#login').click(function() {
+      var data = {
+        nickname: $('#nickname').val(),
+        coords: coords
+      };
+      $.post('/login', data, function(res) {
+        socket = io();
+        socket.emit('request-connection', {
+          uuid: res.uuid
         });
-        $('#login').click(function(){
-            var data = {nickname: $('#nickname').val(), coords: coords};
-            $.post('/login',data, function(res){
-                socket = io();
-                socket.emit('request-connection', {uuid: res.uuid});
-                socket.on('new-message', function(data){
-                    console.log('new-message', data);
-                    $('#messages').append($('<li>').text('from:' + data.from.nickname + ' - msg:' + data.msg));
-                });
-                userId = res.uuid;
-                $('#uuid').html('userid: ' + res.uuid);
-                $.get('/users/' + userId, function(res){
-                    res.forEach(function(u){
-                        $('#users').append('<li><input type="checkbox" id="' + u.id + '" /> ' + u.nickname + '</li>')
-                    });
-                });
-            });
+        socket.on('new-message', function(data) {
+          console.log('new-message', data);
+          $('#messages').append($('<li>').text('from:' + data.from.nickname + ' - msg:' + data.msg));
         });
-
-        $('#send').click(function(){
-            var chks = $.map($('input[type=checkbox]:checked'), function(chk){
-                return chk.id;
-            });
-            var data = {senderId: userId, recipients: chks, msg: $('#msg').val()}
-            $.post('/send', data, function(res){
-                console.log('ok', res);
-            });                  
+        userId = res.uuid;
+        $('#uuid').html('userid: ' + res.uuid);
+        $.get('/users/' + userId, function(res) {
+          res.forEach(function(u) {
+            $('#users').append('<li><input type="checkbox" id="' + u.id + '" /> ' + u.nickname + '</li>')
+          });
         });
+      });
     });
 
-
-    </script>
+    $('#send').click(function() {
+      var chks = $.map($('input[type=checkbox]:checked'), function(chk) {
+        return chk.id;
+      });
+      var data = {
+        senderId: userId,
+        recipients: chks,
+        msg: $('#msg').val()
+      }
+      $.post('/send', data, function(res) {
+        console.log('ok', res);
+      });
+    });
+  });
+  </script>
 
 </body>
+
 </html>
