@@ -33,8 +33,6 @@
     <script type="text/javascript">
     $(function(){
         var socket;
-
-        var serverUrl = 'http://localhost:8000';
         var coords;
         var userId;
         navigator.geolocation.getCurrentPosition(function(geo){ 
@@ -44,7 +42,7 @@
         });
         $('#login').click(function(){
             var data = {nickname: $('#nickname').val(), coords: coords};
-            $.post(serverUrl + '/login',data, function(res){
+            $.post('/login',data, function(res){
                 socket = io();
                 socket.emit('request-connection', {uuid: res.uuid});
                 socket.on('new-message', function(data){
@@ -53,7 +51,7 @@
                 });
                 userId = res.uuid;
                 $('#uuid').html('userid: ' + res.uuid);
-                $.get(serverUrl + '/users/' + userId, function(res){
+                $.get('/users/' + userId, function(res){
                     res.forEach(function(u){
                         $('#users').append('<li><input type="checkbox" id="' + u.id + '" /> ' + u.nickname + '</li>')
                     });
@@ -66,7 +64,7 @@
                 return chk.id;
             });
             var data = {senderId: userId, recipients: chks, msg: $('#msg').val()}
-            $.post(serverUrl + '/send', data, function(res){
+            $.post('/send', data, function(res){
                 console.log('ok', res);
             });                  
         });
