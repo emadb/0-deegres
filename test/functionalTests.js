@@ -1,6 +1,7 @@
 var request = require('request');
 var server = require('../lib/server');
 var expect = require('chai').expect;
+var sinon = require('sinon');
 
 describe('A server receiving a request', function() {
   before(function() {
@@ -33,6 +34,24 @@ describe('A server receiving a request', function() {
       parsedBody.forEach(function(user) {
           expect(user._id).to.not.equal('313131313131313131313131');
       });
+      done();
+    });
+  });
+
+  it('Should be able to send a message', function(done) {
+    var form = {
+      senderId: '111111111111',
+      recipients: ['111111111112', '111111111113'],
+      msg: 'echo'
+    };
+    
+    var io = sinon.stub();
+
+    request.post('http://localhost:8000/send', {form: form}, function(err, res, body) {
+      expect(res.statusCode).to.equal(200);
+      var parsedBody = JSON.parse(body);
+      expect(body).to.not.be.empty();
+      expect(parsedBody.msgid).to.not.be.undefined();
       done();
     });
   });
