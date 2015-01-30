@@ -11,3 +11,4 @@ TODO
 - Add the reply button on every message
 - Improve security. UUID must be randomly generated.
 - The online user list must contains only online users
+
