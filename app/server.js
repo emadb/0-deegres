@@ -11,6 +11,18 @@ server.route({
     }
 });
 
-server.start(function () {
-    console.log('Server running at:', server.info.uri);
+server.route({
+    method: 'POST',
+    path: '/join',
+    handler: function (request, reply) {
+        reply({pippo: 'poppo', uuid: '11'})
+    }
 });
+
+function start(){
+  server.start(function () {
+      console.log('Server running at:', server.info.uri);
+  });
+}
+
+module.exports = {start: start };
