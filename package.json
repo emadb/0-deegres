@@ -1,28 +1,16 @@
 {
-  "name": "zeroDegree",
-  "version": "0.0.0",
-  "description": "A super local chat server",
+  "name": "zero-deegrees",
+  "version": "0.0.1",
+  "description": "A superlocal chat",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "@emadb",
   "license": "ISC",
-  "dependencies": {
-    "chai": "^1.10.0",
-    "hapi": "~7.5.2",
-    "lodash": "^2.4.1",
-    "monk": "^0.9.1",
-    "socket.io": "^1.2.1"
-  },
   "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-jshint": "^0.10.0",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-hapi": "^0.8.1",
-    "grunt-mocha-test": "^0.12.4",
-    "mocha": "^2.0.1",
-    "request": "^2.49.0",
-    "sinon": "^1.12.1"
+    "gulp": "^3.9.0",
+    "gulp-nodemon": "^2.0.3",
+    "hapi": "^8.6.1"
   }
 }
